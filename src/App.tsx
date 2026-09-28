@@ -97,9 +97,11 @@ function App() {
       <div className="brand"><div className="brand-mark">◈</div><span>鸣潮声骸评分</span></div>
       <div className={`resource-status ${resources.phase === 'ready' ? 'is-ready' : ''}`} role="status">
         <div className="resource-title"><span className="status-dot" />
-          {import.meta.env.DEV ? '本地开发预览' : resources.phase === 'ready' ? '已备好离线使用' : resources.phase === 'error' ? '离线资源下载失败' : resources.phase === 'downloading' ? `下载 OCR 资源 ${percent}%` : resources.current || '正在检查离线资源'}
+          {import.meta.env.DEV ? '本地开发预览' : resources.phase === 'ready' ? '已备好离线使用' : resources.phase === 'error' ? '离线资源准备失败' : resources.phase === 'downloading' ? `下载 OCR 资源 ${percent}%` : resources.current || '正在检查离线资源'}
         </div>
         {import.meta.env.PROD && resources.phase === 'downloading' && <><progress max={resources.total} value={resources.loaded} aria-label="OCR 资源下载进度" /><small>{resources.current} · {formatBytes(resources.loaded)} / {formatBytes(resources.total)} · {resources.speed > 0 ? formatSpeed(resources.speed) : '正在连接'} · {resources.completed}/{resourceCount} 项已缓存</small></>}
+        {import.meta.env.PROD && resources.phase === 'installing' && <><progress aria-label="离线页面安装中，无法统计百分比" /><small>OCR 资源已缓存，正在缓存网页和头像；浏览器未提供此阶段的下载百分比。</small></>}
+        {import.meta.env.PROD && resources.phase === 'checking' && <small>正在核对 {resourceCount} 项 OCR 资源缓存…</small>}
         {import.meta.env.PROD && resources.phase === 'error' && <div className="resource-error"><small>{resources.error}</small><button type="button" onClick={() => void prepareOfflineResources().catch(() => undefined)}>重试下载</button></div>}
       </div>
     </header>

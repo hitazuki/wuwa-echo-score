@@ -19,7 +19,7 @@ export type ResourceStatus = {
 }
 
 const total = assets.reduce((sum, asset) => sum + asset.bytes, 0)
-let status: ResourceStatus = { phase: 'installing', loaded: 0, total, current: '', completed: 0, speed: 0 }
+let status: ResourceStatus = { phase: 'checking', loaded: 0, total, current: '正在检查已缓存资源', completed: 0, speed: 0 }
 let promise: Promise<void> | null = null
 let runtimePaths: { mjs: string; wasm: string } | null = null
 const listeners = new Set<(next: ResourceStatus) => void>()
@@ -57,15 +57,23 @@ async function waitForController() {
   })
 }
 
+async function waitForReadyServiceWorker() {
+  let timeout: number | undefined
+  try {
+    await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise<never>((_, reject) => {
+        timeout = window.setTimeout(() => reject(new Error('离线页面安装超时，请确认网站可访问后重试')), 60000)
+      }),
+    ])
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
+
 async function prepare() {
   if (!('serviceWorker' in navigator) || !('caches' in window)) throw new Error('当前浏览器不支持离线缓存')
-  update({ phase: 'installing', loaded: 0, completed: 0, speed: 0, current: '正在安装离线页面', error: undefined })
-  const existingRegistration = await navigator.serviceWorker.getRegistration(base)
-  if (!existingRegistration) await navigator.serviceWorker.register(`${base}sw.js`)
-  await navigator.serviceWorker.ready
-  await waitForController()
-
-  update({ phase: 'checking', current: '正在检查已缓存资源' })
+  update({ phase: 'checking', loaded: 0, completed: 0, speed: 0, current: '正在检查已缓存资源', error: undefined })
   const cache = await caches.open(cacheName)
   let completedBytes = 0
   let completed = 0
@@ -124,6 +132,11 @@ async function prepare() {
     mjs: URL.createObjectURL(await mjs.blob()),
     wasm: URL.createObjectURL(await wasm.blob()),
   }
+  update({ phase: 'installing', loaded: total, completed: assets.length, speed: 0, current: '正在安装离线页面' })
+  const existingRegistration = await navigator.serviceWorker.getRegistration(base)
+  if (!existingRegistration) await navigator.serviceWorker.register(`${base}sw.js`)
+  await waitForReadyServiceWorker()
+  await waitForController()
   update({ phase: 'ready', loaded: total, completed: assets.length, speed: 0, current: '' })
 }
 

@@ -18,7 +18,7 @@ export default defineConfig({
         icons: [{ src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,txt,json,tar,wasm,mjs}'],
+        globPatterns: ['**/*.{js,css,html,svg,txt,json,tar,wasm,mjs,png}'],
         globIgnores: ['**/assets/ort-wasm-simd-threaded.jsep-*.wasm', '**/models/**', '**/ort/**'],
         maximumFileSizeToCacheInBytes: 50 * 1024 * 1024,
         navigateFallback: '/wuwa-echo-score/index.html',

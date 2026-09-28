@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { characters, formatScore, scoreEcho, statOptions, templateDate, type Echo, type Entry } from './scoring'
 import { recognizeEcho, type OcrStage } from './ocr'
 import { getResourceStatus, prepareOfflineResources, resourceCount, subscribeResources } from './offline'
+import { CharacterPicker } from './CharacterPicker'
 import './App.css'
 
 type BusyState = Record<string, { stage: OcrStage | 'error'; startedAt: number }>
@@ -106,7 +107,7 @@ function App() {
     <main>
       <section className="hero"><div className="hero-copy"><p className="eyebrow">ECHO ANALYZER · LOCAL OCR</p><h1>看清每一条词条的价值</h1><p className="hero-sub">选择角色，粘贴单只声骸的面板截图。识别、校对、逐条评分，都在你的浏览器中完成。</p></div><div className="hero-stat"><span>{characters.length}</span><small>角色评分模板</small></div></section>
       <section className="workspace">
-        <div className="controls"><div className="field character-field"><label htmlFor="character">评分角色</label><select id="character" value={characterId} onChange={(event) => setCharacterId(event.target.value)}>{characters.map((item) => <option key={item.id} value={item.id}>{item.character} ({item.id}) · {item.template.name}</option>)}</select></div><div className="template-meta">当前模板：{selected.template.name}<br /><span>更换角色后，已有声骸会立即重新评分</span></div></div>
+        <div className="controls"><div className="field character-field"><label>评分角色</label><CharacterPicker value={characterId} onChange={setCharacterId} /></div><div className="template-meta">当前模板：{selected.template.name}<br /><span>更换角色后，已有声骸会立即重新评分</span></div></div>
         <div className="dropzone" onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const file = event.dataTransfer.files[0]; if (file) void addImage(file) }} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter') fileInput.current?.click() }}><div className="drop-icon">⌁</div><div><strong>粘贴截图，开始评分</strong><p>按 Ctrl + V，或点击选择 / 拖入图片。每张图生成独立声骸卡片。</p></div><span className="upload-action">选择图片</span><input ref={fileInput} type="file" accept="image/*" hidden onChange={(event) => { const file = event.target.files?.[0]; if (file) void addImage(file); event.target.value = '' }} /></div>
         {notice && <p className="notice" role="alert">{notice}</p>}
         {echoes.length > 0 && <div className="results-heading"><div><p className="eyebrow">YOUR ECHOES</p><h2>评分结果 <small>{echoes.length} 只</small></h2></div><div className="aggregate">合计 <strong>{formatScore(combined)}</strong><span>仅供多只声骸参考</span></div></div>}

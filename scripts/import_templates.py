@@ -43,6 +43,16 @@ def main() -> None:
                 "template": data,
             })
     templates.sort(key=lambda item: (item["character"], item["id"]))
+    # The four Rover elements have separate IDs for the two protagonists, but
+    # their scoring templates are identical. Keep the first ID for the picker.
+    unique = []
+    seen = set()
+    for item in templates:
+        signature = (item["character"], json.dumps(item["template"], ensure_ascii=False, sort_keys=True))
+        if signature not in seen:
+            unique.append(item)
+            seen.add(signature)
+    templates = unique
     if len(templates) < 50:
         raise SystemExit(f"Only {len(templates)} templates found; refusing partial import")
     output = {

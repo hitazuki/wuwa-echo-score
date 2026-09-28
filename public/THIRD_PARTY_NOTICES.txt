@@ -9,4 +9,9 @@ https://github.com/microsoft/onnxruntime
 角色评分模板：从 XutheringWavesUID 的 calc.json 资源整理。该项目采用 GPL-3.0 许可证；本项目保留来源与许可声明。
 https://github.com/Loping151/XutheringWavesUID
 
+角色缩略头像：从 ryanbenson/wuthering-waves-assets 的角色图片整理，并随本站静态资源分发。
+来源版本：d77801ecfb8c3abc950c1ffbc6ddec94f5129889
+https://github.com/ryanbenson/wuthering-waves-assets
+该资源库未声明覆盖图片的开源许可；图片中的鸣潮角色形象权利归库洛游戏或相关权利人所有。本项目不主张拥有这些形象的权利。
+
 鸣潮及相关游戏名称归其权利人所有。本工具不是游戏官方产品。

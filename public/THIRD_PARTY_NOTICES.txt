@@ -1,0 +1,12 @@
+鸣潮声骸评分工具第三方资源说明
+
+OCR：PaddleOCR.js 与 PP-OCRv6 small 模型由 PaddlePaddle/PaddleOCR 提供，采用 Apache-2.0 许可证。
+https://github.com/PaddlePaddle/PaddleOCR
+
+浏览器推理：ONNX Runtime Web 由 Microsoft 提供，采用 MIT 许可证。
+https://github.com/microsoft/onnxruntime
+
+角色评分模板：从 XutheringWavesUID 的 calc.json 资源整理。该项目采用 GPL-3.0 许可证；本项目保留来源与许可声明。
+https://github.com/Loping151/XutheringWavesUID
+
+鸣潮及相关游戏名称归其权利人所有。本工具不是游戏官方产品。

@@ -19,11 +19,16 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,txt,json,tar,wasm,mjs}'],
-        globIgnores: ['**/assets/ort-wasm-simd-threaded.jsep-*.wasm'],
+        globIgnores: ['**/assets/ort-wasm-simd-threaded.jsep-*.wasm', '**/models/**', '**/ort/**'],
         maximumFileSizeToCacheInBytes: 50 * 1024 * 1024,
         navigateFallback: '/wuwa-echo-score/index.html',
         skipWaiting: true,
         clientsClaim: true,
+        runtimeCaching: [{
+          urlPattern: /\/wuwa-echo-score\/(?:models\/.*\.tar|ort\/.*\.(?:wasm|mjs))$/,
+          handler: 'CacheFirst',
+          options: { cacheName: 'wuwa-ocr-assets-v1' },
+        }],
       },
     }),
   ],

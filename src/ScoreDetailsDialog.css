@@ -1,8 +1,9 @@
 .details-trigger{display:block;margin-top:7px;padding:6px 10px;border:1px solid #4c8278;border-radius:6px;background:#173332;color:#a5ead7;font-size:12px;cursor:pointer}
 .details-trigger:hover,.details-trigger:focus-visible{background:#24504a;border-color:#93dfca}
-.score-details-dialog{box-sizing:border-box;width:min(760px,calc(100vw - 28px));max-height:min(88vh,900px);padding:0;border:1px solid #42675e;border-radius:14px;background:#0e2027;color:#e7f1ee;box-shadow:0 24px 80px #000b}
-.score-details-dialog::backdrop{background:#02090cca;backdrop-filter:blur(3px)}
-.score-details-content{min-width:0}
+html:has(.score-details-dialog[open]){overflow:hidden}
+.score-details-dialog{box-sizing:border-box;width:min(760px,calc(100vw - 28px));max-height:min(88vh,900px);padding:0;overflow:hidden;border:1px solid #42675e;border-radius:14px;background:#0e2027;color:#e7f1ee;box-shadow:0 24px 80px #000b}
+.score-details-dialog::backdrop{background:#02090ce0}
+.score-details-content{display:flex;flex-direction:column;min-width:0;max-height:min(88vh,900px)}
 .score-details-header{display:flex;align-items:center;gap:15px;padding:17px 22px;border-bottom:1px solid #28474c;background:#122b30}
 .score-details-header img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#244046}
 .score-details-header p{margin:0 0 4px;color:#87bdaf;font-size:11px;letter-spacing:.12em}
@@ -10,7 +11,7 @@
 .score-details-header small{color:#92aeb0;font-size:12px}
 .score-details-close{margin-left:auto;align-self:flex-start;border:0;background:none;color:#9cb8b7;font-size:26px;line-height:1;cursor:pointer}
 .score-details-close:hover{color:#e9f9f4}
-.score-details-body{padding:20px 24px 26px}
+.score-details-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:#607e7d #10252b;padding:20px 24px 26px}
 .score-details-formula{display:flex;flex-direction:column;gap:7px;padding:13px 15px;border:1px solid #315956;border-radius:9px;background:#183438;font-size:13px;line-height:1.6}
 .score-details-formula strong{color:#a9e8d4}
 .score-details-formula small,.score-details-note{color:#a1b9b9;font-size:12px;line-height:1.7}
@@ -31,4 +32,4 @@
 .score-detail-row strong{color:#c9f0de;font-weight:600}
 .score-detail-row strong.is-zero{color:#779394;font-weight:400}
 .score-details-note{margin:18px 0 0}
-@media(max-width:620px){.score-details-dialog{max-height:92vh}.score-details-header{padding:13px 14px}.score-details-header img{width:46px;height:46px}.score-details-header h2{font-size:17px}.score-details-body{padding:15px 12px 20px}.score-detail-heading,.score-detail-row{grid-template-columns:minmax(0,1fr) 66px 80px;gap:5px;padding:7px 6px}.score-detail-row{font-size:11px}.score-details-costs button{flex:1;padding:7px 5px}}
+@media(max-width:620px){.score-details-dialog,.score-details-content{max-height:92vh}.score-details-header{padding:13px 14px}.score-details-header img{width:46px;height:46px}.score-details-header h2{font-size:17px}.score-details-body{padding:15px 12px 20px}.score-detail-heading,.score-detail-row{grid-template-columns:minmax(0,1fr) 66px 80px;gap:5px;padding:7px 6px}.score-detail-row{font-size:11px}.score-details-costs button{flex:1;padding:7px 5px}}

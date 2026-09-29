@@ -3,6 +3,7 @@ import { characters, formatScore, scoreEcho, statOptions, templateDate, type Ech
 import { recognizeEcho, type OcrStage } from './ocr'
 import { getResourceStatus, prepareOfflineResources, resourceCount, subscribeResources } from './offline'
 import { CharacterPicker } from './CharacterPicker'
+import { ScoreDetailsDialog } from './ScoreDetailsDialog'
 import './App.css'
 
 type BusyState = Record<string, { stage: OcrStage | 'error'; startedAt: number }>
@@ -29,6 +30,7 @@ function App() {
   const [resources, setResources] = useState(getResourceStatus)
   const [clock, setClock] = useState(Date.now)
   const [notice, setNotice] = useState('')
+  const [showScoreDetails, setShowScoreDetails] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const selected = useMemo(() => characters.find((item) => item.id === characterId) ?? characters[0], [characterId])
   const processing = Object.values(busy).some((item) => item.stage !== 'error')
@@ -109,7 +111,7 @@ function App() {
     <main>
       <section className="hero"><div className="hero-copy"><p className="eyebrow">ECHO ANALYZER · LOCAL OCR</p><h1>看清每一条词条的价值</h1><p className="hero-sub">选择角色，粘贴单只声骸的面板截图。识别、校对、逐条评分，都在你的浏览器中完成。</p></div><div className="hero-stat"><span>{characters.length}</span><small>角色评分模板</small></div></section>
       <section className="workspace">
-        <div className="controls"><div className="field character-field"><label>评分角色</label><CharacterPicker value={characterId} onChange={setCharacterId} /></div><div className="template-meta">当前模板：{selected.template.name}<br /><span>更换角色后，已有声骸会立即重新评分</span></div></div>
+        <div className="controls"><div className="field character-field"><label>评分角色</label><CharacterPicker value={characterId} onChange={setCharacterId} /></div><div className="template-meta">当前模板：{selected.template.name}<br /><span>更换角色后，已有声骸会立即重新评分</span><button type="button" className="details-trigger" onClick={() => setShowScoreDetails(true)}>查看评分细则</button></div></div>
         <div className="dropzone" onClick={() => fileInput.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const file = event.dataTransfer.files[0]; if (file) void addImage(file) }} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter') fileInput.current?.click() }}><div className="drop-icon">⌁</div><div><strong>粘贴截图，开始评分</strong><p>按 Ctrl + V，或点击选择 / 拖入图片。每张图生成独立声骸卡片。</p></div><span className="upload-action">选择图片</span><input ref={fileInput} type="file" accept="image/*" hidden onChange={(event) => { const file = event.target.files?.[0]; if (file) void addImage(file); event.target.value = '' }} /></div>
         {notice && <p className="notice" role="alert">{notice}</p>}
         {echoes.length > 0 && <div className="results-heading"><div><p className="eyebrow">YOUR ECHOES</p><h2>评分结果 <small>{echoes.length} 只</small></h2></div><div className="aggregate">合计 <strong>{formatScore(combined)}</strong><span>仅供多只声骸参考</span></div></div>}
@@ -127,6 +129,7 @@ function App() {
         })}</div>
       </section>
     </main>
+    {showScoreDetails && <ScoreDetailsDialog selected={selected} initialCost={(echoes[0]?.cost === 1 || echoes[0]?.cost === 3) ? echoes[0].cost : 4} onClose={() => setShowScoreDetails(false)} />}
     <footer>本工具仅计算声骸词条评分，不代表实战伤害。评分模板导出于 {new Date(templateDate).toLocaleDateString('zh-CN')}。截图仅在本机处理。<a href={`${base}THIRD_PARTY_NOTICES.txt`}>第三方资源说明</a></footer>
   </div>
 }
